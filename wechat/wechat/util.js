@@ -60,4 +60,4 @@ exports.formatMessage = function(xml) {
     })
   })
 }
-// exports.formatMessage = formatMessage
+exports.formatMessage = formatMessage

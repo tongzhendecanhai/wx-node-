@@ -48,23 +48,6 @@ module.exports = function(wxargument) {
       var message = util.formatMessage(content.xml)
       console.log('-------------------------处理后的xml')
       console.log(message)
-      // if (message.MsgType === 'event') {
-      //   if (message.Event === 'subscribe') {
-      //     var now = new Date().getTime()
-      //
-      //     _this.status = 200
-      //     _this.type = 'application/xml'
-      //     _this.body = '<xml>' +
-      //       '<ToUserName><![CDATA[' + message.FromUserName + ']]></ToUserName>' +
-      //       '<FromUserName><![CDATA[' + message.ToUserName + ']]></FromUserName>' +
-      //       '<CreateTime>' + now + '</CreateTime>' +
-      //       '<MsgType><![CDATA[text]]></MsgType>' +
-      //       '<Content><![CDATA[Hi, Imooc同学！！]]></Content>' +
-      //       '</xml>'
-      //     return
-      //   }
-
-      // }
       if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
           var now = new Date().getTime()
@@ -76,9 +59,8 @@ module.exports = function(wxargument) {
             '<FromUserName><![CDATA[' + message.ToUserName + ']]></FromUserName>' +
             '<CreateTime>' + now + '</CreateTime>' +
             '<MsgType><![CDATA[text]]></MsgType>' +
-            '<Content><![CDATA[Hi, Imooc同学！！]]></Content>' +
+            '<Content><![CDATA[你好吗 , 我的朋友 , 未来的你一定会感激那时笨拙但仍然坚持的自己 , The wind up , only trying to survive .]]></Content>' +
             '</xml>'
-
           return
         }
       }
