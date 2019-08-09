@@ -2,6 +2,7 @@
 
 var xml2js = require('xml2js')
 var Promise = require('bluebird')
+var tpl = require('./tpl')
 
 exports.parseXMLAsnyc = function(xml) {
   return new Promise(function(resolve, reject) {
@@ -49,15 +50,36 @@ function formatMessage(result) {
   return message
 }
 
-exports.formatMessage = function(xml) {
-  console.log('--------------11')
-  return new Promise(function(resolve, reject) {
-    xml2js.parseString(xml, {
-      trim: true
-    }, function(err, content) {
-      if (err) reject(err)
-      else resolve(content)
-    })
-  })
-}
+// exports.formatMessage = function(xml) {
+//   return new Promise(function(resolve, reject) {
+//     xml2js.parseString(xml, {
+//       trim: true
+//     }, function(err, content) {
+//       if (err) reject(err)
+//       else resolve(content)
+//     })
+//   })
+// }
 exports.formatMessage = formatMessage
+
+exports.tpl = function(content, message) {
+  var info = {}
+  var type = 'text'
+  // console.log('1111111111111111111111111111111111111111111111111')
+  // console.log(this.weixin)
+  var fromUserName = message.FromUserName
+  var toUserName = message.ToUserName
+
+  if (Array.isArray(content)) {
+    type = 'news'
+  }
+  type = content.type || type
+
+  info.content = content
+  info.createTime = new Date().getTime()
+  info.msgType = type
+  info.toUserName = fromUserName
+  info.fromUserName = toUserName
+
+  return tpl.compiled(info)
+}
