@@ -24,7 +24,10 @@ exports.reply = function*(next) {
     }
     //点击事件
     else if (message.Event === 'CLICK') {
-      console.log('------------又是一个白嫖狗')
+      if (message.Eventkey) {
+        console.log('扫二维码进来：' + message.Eventkey + ' ' + message.Ticket)
+      }
+      this.body = 'http://www.tongzhendecanhai.top/wxcontent/music/thz.mp3'
     }
     //事件推送
     else if (message.Event === 'SCAN') {
@@ -111,17 +114,63 @@ exports.reply = function*(next) {
         hqmusicUrl: 'http://www.tongzhendecanhai.top/wxcontent/music/thz.mp3',
         media_id: data.media_id
       }]
-    }
+    } else if (content === '10') {
+      var picData = yield wechatApi.uploadMaterial('image', __dirname + '/1.jpg', {})
+      var media = {
+        articles: [{
+          title: 'huahua',
+          thumb_media_id: picData.media_id,
+          author: 'huang',
+          digest: '无',
+          show_cover_pic: 1,
+          content: '无',
+          content_source_url: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
+          need_open_comment: 1,
+          only_fans_can_comment: 1
+        }, {
+          title: 'huahua1',
+          thumb_media_id: picData.media_id,
+          author: 'huang',
+          digest: '无',
+          show_cover_pic: 1,
+          content: '无',
+          content_source_url: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
+          need_open_comment: 1,
+          only_fans_can_comment: 1
+        }, {
+          title: 'huahua2',
+          thumb_media_id: picData.media_id,
+          author: 'huang',
+          digest: '无',
+          show_cover_pic: 1,
+          content: '无',
+          content_source_url: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
+          need_open_comment: 1,
+          only_fans_can_comment: 1
+        }]
+      }
+      data = yield wechatApi.uploadMaterial('news', media, {})
+      data = yield wechatApi.getMaterial(data.media_id, 'news', {})
 
-    this.body = reply
-  } else if (message.MsgType === 'music') {
-    reply = {
-      type: 'music',
-      title: '童话镇',
-      description: '陈一发儿',
-      musicURL: 'http://www.tongzhendecanhai.top/wxcontent/music/thz.mp3',
-      hqmusicUrl: 'http://www.tongzhendecanhai.top/wxcontent/music/thz.mp3',
-      media_id: data.media_id
+      // console.log(data)
+
+      var items = data.news_item
+      var news = []
+      items.forEach(function(item) {
+        news.push({
+          title: item.title,
+          description: item.digest,
+          picurl: picData.url,
+          url: item.url
+        })
+      })
+      // reply = [{
+      //   title: '再找前端工作的阿黄',
+      //   description: '你快看，那个人好像条狗🐕',
+      //   picurl: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
+      //   url: 'http://www.tongzhendecanhai.top/wxcontent/html/1.html'
+      // }]
+      reply = news
     }
     this.body = reply
   }

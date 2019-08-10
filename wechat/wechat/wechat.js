@@ -11,7 +11,6 @@ var api = {
   temporary: {
     upload: httphead + 'media/upload?',
     get: httphead + 'media/get?'
-
   },
   permanent: {
     upload: httphead + 'material/add_material?',
@@ -19,7 +18,9 @@ var api = {
     uploadNewsImg: httphead + 'media/uploadimg?',
     get: httphead + 'material/get_material?',
     del: httphead + 'material/del_material?',
-    update: httphead + 'material/update_news?'
+    update: httphead + 'material/update_news?',
+    get_count: httphead + 'material/get_materialcount?',
+    get_list: httphead + 'material/batchget_material?',
   }
 }
 
@@ -146,12 +147,7 @@ Wechat.prototype.uploadMaterial = function(type, material, permanent) {
         } else {
           options.formData = form
         }
-        request({
-            method: 'POST',
-            url: url,
-            formData: form,
-            json: true
-          }).then(function(res) {
+        request(options).then(function(res) {
             // console.log(res.body)
             var _data = res.body //拿到票据和过期时间
             // console.log('小老弟' + _data)
@@ -181,11 +177,44 @@ Wechat.prototype.getMaterial = function(media_id, type, permanent) {
   return new Promise(function(resolve, reject) {
     _this.fetchAccessToken()
       .then(function(data) {
-        var url = uploadUrl + 'access_token=' + data.access_token + '&media_id=' + media_id
-        if (!permanent && type === 'video') {
-          url = url.replace('https://', 'http://')
+        var url = getUrl + 'access_token=' + data.access_token
+
+        var form = {}
+        var options = {
+          method: 'POST',
+          url: url,
+          json: true
         }
-        resolve(url)
+        if (permanent) {
+          form.media_id = media_id
+          form.access_token = data.access_token
+          options.body = form
+        } else {
+          if (type === 'video') {
+            url = replace('https://', 'http://')
+          }
+          url += '&media_id=' + media_id
+        }
+        if (type === 'news' || type === 'video') {
+          request(options).then(function(res) {
+              var _data = res.body
+              if (_data) {
+                resolve(_data)
+              } else {
+                throw new Error('get Material is fails')
+              }
+            })
+            .catch(function(err) {
+              reject(err)
+            })
+        } else {
+          resolve(url)
+        }
+
+        // if (!permanent && type === 'video') {
+        //   url = url.replace('https://', 'http://')
+        // }
+        // resolve(url)
       })
   })
 }
@@ -224,7 +253,7 @@ Wechat.prototype.delMaterial = function(media_id) {
   })
 }
 
-//修改永久素材
+//修改永久图文素材
 Wechat.prototype.updateMaterial = function(media_id, news) {
   var _this = this
   var form = {
@@ -258,6 +287,64 @@ Wechat.prototype.updateMaterial = function(media_id, news) {
   })
 }
 
+//获取素材总数
+Wechat.prototype.get_countMaterial = function() {
+  var _this = this
+
+  return new Promise(function(resolve, reject) {
+    _this.fetchAccessToken()
+      .then(function(data) {
+        var url = api.permanent.get_count + 'access_token=' + data.access_token + '&media_id=' + media_id
+
+        request({
+          method: 'GET',
+          url: url,
+          json: true
+        }).then(function(res) {
+          // console.log(res.body)
+          var _data = res.body //拿到票据和过期时间
+          // console.log('小老弟' + _data)
+          if (_data) {
+            resolve(_data)
+          } else {
+            throw new Error('get_count Material is fails')
+          }
+        })
+      })
+  })
+}
+
+//获取素材列表
+Wechat.prototype.get_listMaterial = function(options) {
+  var _this = this
+
+  options.type = options.type || 'image'
+  options.offset = options.offset || '0'
+  options.count = options.count || '1'
+
+  return new Promise(function(resolve, reject) {
+    _this.fetchAccessToken()
+      .then(function(data) {
+        var url = api.permanent.get_list + 'access_token=' + data.access_token + '&media_id=' + media_id
+
+        request({
+          method: 'POST',
+          url: url,
+          body: options,
+          json: true
+        }).then(function(res) {
+          // console.log(res.body)
+          var _data = res.body //拿到票据和过期时间
+          // console.log('小老弟' + _data)
+          if (_data) {
+            resolve(_data)
+          } else {
+            throw new Error('get_list Material is fails')
+          }
+        })
+      })
+  })
+}
 //增加reply回复方法
 Wechat.prototype.reply = function() {
   // console.log("-------------------reply--------------------")
