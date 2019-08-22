@@ -154,7 +154,7 @@ Wechat.prototype.uploadMaterial = function(type, material, permanent) {
             if (_data) {
               resolve(_data)
             } else {
-              throw new Error('uploadMaterial is fails')
+              throw new Error('upload Material is fails')
             }
           })
           .catch(function(err) {
@@ -294,7 +294,7 @@ Wechat.prototype.get_countMaterial = function() {
   return new Promise(function(resolve, reject) {
     _this.fetchAccessToken()
       .then(function(data) {
-        var url = api.permanent.get_count + 'access_token=' + data.access_token + '&media_id=' + media_id
+        var url = api.permanent.get_count + 'access_token=' + data.access_token
 
         request({
           method: 'GET',
@@ -325,7 +325,7 @@ Wechat.prototype.get_listMaterial = function(options) {
   return new Promise(function(resolve, reject) {
     _this.fetchAccessToken()
       .then(function(data) {
-        var url = api.permanent.get_list + 'access_token=' + data.access_token + '&media_id=' + media_id
+        var url = api.permanent.get_list + 'access_token=' + data.access_token
 
         request({
           method: 'POST',

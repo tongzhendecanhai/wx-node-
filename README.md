@@ -3,7 +3,7 @@
 ## 项目介绍
 本项目采用node来对当下火热的微信公众号进行开发
 ## 项目准备
-### 1.进入微信公众平台官网[https://mp.weixin.qq.com]
+### 1.1进入微信公众平台官网[https://mp.weixin.qq.com]
 
 ​	用QQ号或邮箱注册订阅号（即公众号）
 
@@ -20,6 +20,10 @@
 ​	注意：点击设置时需下载一个验证文件MP_verify_wtaRuDM3HTZJfW1d.txt，将其放在mp文件目录下
 
 ![img](C:\Users\童真的残骸\OneDrive\桌面\Github\wx公众号\wx-node-\readme配图\3.png)
+
+### 1.2 项目用到模块有：
+
+`npm install koa sha1 xml2js bluebird lodash ejs heredoc request --save`
 
 ### 2.用测试号来进行接口配置
 

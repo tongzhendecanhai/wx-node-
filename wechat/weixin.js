@@ -127,26 +127,6 @@ exports.reply = function*(next) {
           content_source_url: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
           need_open_comment: 1,
           only_fans_can_comment: 1
-        }, {
-          title: 'huahua1',
-          thumb_media_id: picData.media_id,
-          author: 'huang',
-          digest: '无',
-          show_cover_pic: 1,
-          content: '无',
-          content_source_url: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
-          need_open_comment: 1,
-          only_fans_can_comment: 1
-        }, {
-          title: 'huahua2',
-          thumb_media_id: picData.media_id,
-          author: 'huang',
-          digest: '无',
-          show_cover_pic: 1,
-          content: '无',
-          content_source_url: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
-          need_open_comment: 1,
-          only_fans_can_comment: 1
         }]
       }
       data = yield wechatApi.uploadMaterial('news', media, {})
@@ -164,13 +144,37 @@ exports.reply = function*(next) {
           url: item.url
         })
       })
-      // reply = [{
-      //   title: '再找前端工作的阿黄',
-      //   description: '你快看，那个人好像条狗🐕',
-      //   picurl: 'http://www.tongzhendecanhai.top/wxcontent/img/1.jpg',
-      //   url: 'http://www.tongzhendecanhai.top/wxcontent/html/1.html'
-      // }]
       reply = news
+    } else if (content === '11') {
+      var counts = yield wechatApi.get_countMaterial()
+      // console.log(JSON.stringify(counts))
+      var results = yield [
+        wechatApi.get_listMaterial({
+          type: 'image',
+          offset: 0,
+          count: 10
+        }),
+
+        wechatApi.get_listMaterial({
+          type: 'video',
+          offset: 0,
+          count: 10
+        }),
+
+        wechatApi.get_listMaterial({
+          type: 'voice',
+          offset: 0,
+          count: 10
+        }),
+
+        wechatApi.get_listMaterial({
+          type: 'news',
+          offset: 0,
+          count: 10
+        })
+      ]
+      console.log(JSON.stringify(results))
+      reply = '1'
     }
     this.body = reply
   }
